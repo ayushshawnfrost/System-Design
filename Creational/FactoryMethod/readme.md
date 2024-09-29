@@ -76,3 +76,120 @@ classDiagram
 - **Loose Coupling**: Clients interact with abstract interfaces rather than concrete implementations, reducing dependencies.
 
 This pattern is particularly useful in scenarios where a class cannot anticipate the class of objects it must create, or when subclasses should specify the objects to be created.
+
+
+# Practical Examples of the Factory Method Design Pattern
+
+The **Factory Method design pattern** is used in software development to abstract object creation from the client, allowing the client to work with interfaces or abstract classes rather than concrete implementations. Below are some practical examples where this pattern is widely applied:
+
+## 1. Database Connections
+
+In an application that connects to different databases (e.g., PostgreSQL, MySQL, MongoDB), the Factory Method pattern can be used to create the appropriate database connection without exposing the client to the specific database details.
+
+```java
+public interface DatabaseConnection {
+    void connect();
+}
+
+public class PostgresConnection implements DatabaseConnection {
+    public void connect() {
+        // PostgreSQL connection logic
+    }
+}
+
+public class MySQLConnection implements DatabaseConnection {
+    public void connect() {
+        // MySQL connection logic
+    }
+}
+
+public abstract class DatabaseFactory {
+    public abstract DatabaseConnection createConnection();
+}
+
+public class PostgresFactory extends DatabaseFactory {
+    public DatabaseConnection createConnection() {
+        return new PostgresConnection();
+    }
+}
+
+public class MySQLFactory extends DatabaseFactory {
+    public DatabaseConnection createConnection() {
+        return new MySQLConnection();
+    }
+}
+```
+
+### 2. Loggers
+
+Logging frameworks often use the Factory Method to decide which logger to create, depending on the log type or environment (e.g., console vs file logging).
+
+```java
+public interface Logger {
+    void log(String message);
+}
+
+public class ConsoleLogger implements Logger {
+    public void log(String message) {
+        System.out.println("Console log: " + message);
+    }
+}
+
+public class FileLogger implements Logger {
+    public void log(String message) {
+        // File logging logic
+    }
+}
+
+public class LoggerFactory {
+    public static Logger getLogger(String type) {
+        if (type.equals("console")) {
+            return new ConsoleLogger();
+        } else if (type.equals("file")) {
+            return new FileLogger();
+        }
+        throw new IllegalArgumentException("Invalid logger type");
+    }
+}
+
+```
+
+### 3. Document Processing Systems
+
+In systems that handle different types of documents (e.g., Word, PDF, Excel), a Factory Method can be used to create the appropriate document parser based on the file type.
+
+```java
+public interface DocumentParser {
+    void parse(String filePath);
+}
+
+public class WordParser implements DocumentParser {
+    public void parse(String filePath) {
+        // Word parsing logic
+    }
+}
+
+public class PDFParser implements DocumentParser {
+    public void parse(String filePath) {
+        // PDF parsing logic
+    }
+}
+
+public class ExcelParser implements DocumentParser {
+    public void parse(String filePath) {
+        // Excel parsing logic
+    }
+}
+
+public class DocumentParserFactory {
+    public static DocumentParser getParser(String fileType) {
+        switch (fileType.toLowerCase()) {
+            case "word": return new WordParser();
+            case "pdf": return new PDFParser();
+            case "excel": return new ExcelParser();
+            default: throw new IllegalArgumentException("Unknown file type");
+        }
+    }
+}
+
+```
